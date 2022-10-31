@@ -16,7 +16,15 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'org.springframework.security:spring-security-core:5.7.3'
+    implementation 'org.springframework.security:spring-security-web:5.7.3'
+    implementation 'org.springframework.security:spring-security-config:5.7.3'
+
+
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
