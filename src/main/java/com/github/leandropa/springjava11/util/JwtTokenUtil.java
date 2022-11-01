@@ -16,6 +16,13 @@ public class JwtTokenUtil {
 	}
 
 	public boolean validate(String token) {
+		try {
+			JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
+					.build()
+					.verify(token);
+			return true;
+		} catch (Exception ignored) {
+		}
 		return false;
 	}
 
