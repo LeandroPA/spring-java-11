@@ -1,14 +1,11 @@
 package com.github.leandropa.springjava11.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.github.leandropa.springjava11.util.JwtTokenUtil;
 import com.github.leandropa.springjava11.util.SecurityConstants;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -19,14 +16,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	@Resource
 	private JwtTokenUtil jwtTokenUtil;
-
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
-		super(authenticationManager);
-	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

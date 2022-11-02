@@ -1,6 +1,7 @@
 package com.github.leandropa.springjava11.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.leandropa.springjava11.filter.JWTAuthorizationFilter;
 import com.github.leandropa.springjava11.util.JwtTokenUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,5 +23,10 @@ public class AppConfig {
 	@Bean
 	public JwtTokenUtil jwtTokenUtil() {
 		return new JwtTokenUtil();
+	}
+
+	@Bean
+	public JWTAuthorizationFilter jwtAuthorizationFilter() {
+		return new JWTAuthorizationFilter();
 	}
 }

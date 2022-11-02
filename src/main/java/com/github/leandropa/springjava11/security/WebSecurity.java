@@ -27,6 +27,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Resource
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	@Resource
+	private JWTAuthorizationFilter jwtAuthorizationFilter;
+
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -56,7 +59,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.authorizeRequests().antMatchers(SecurityConstants.SIGN_UP_URL).permitAll()
 				.anyRequest().authenticated()
 				.and()
-				.addFilterBefore(new JWTAuthorizationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.exceptionHandling().authenticationEntryPoint( (req, res, ex) ->
