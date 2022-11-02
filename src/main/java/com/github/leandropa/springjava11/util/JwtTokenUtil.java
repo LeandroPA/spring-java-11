@@ -8,9 +8,9 @@ import java.util.Date;
 
 public class JwtTokenUtil {
 
-	public String generateAccessToken(User user) {
+	public String generateAccessToken(String username) {
 		return JWT.create()
-				.withSubject(user.getUsername())
+				.withSubject(username)
 				.withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
 				.sign(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()));
 	}
