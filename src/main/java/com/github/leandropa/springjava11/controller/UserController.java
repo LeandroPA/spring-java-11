@@ -2,6 +2,7 @@ package com.github.leandropa.springjava11.controller;
 
 import com.github.leandropa.springjava11.entity.User;
 import com.github.leandropa.springjava11.repository.UserRepository;
+import com.github.leandropa.springjava11.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,49 +19,46 @@ import java.util.Optional;
 public class UserController {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@PostMapping
 	public ResponseEntity<?> create(@RequestBody User user) {
 
-		user = userRepository.save(user);
+		user = userService.insert(user);
 
 		URI newUserUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user).toUri();
 
 		return ResponseEntity.created(newUserUri).body(user);
 	}
+
 	@GetMapping("/{userId}")
 	public ResponseEntity<?> get(@PathVariable ObjectId userId) {
 
-		return userRepository.findById(userId)
+		return userService.getUserById(userId)
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
+
 	@PutMapping("/{userId}")
 	public ResponseEntity<?> update(@PathVariable ObjectId userId, @RequestBody User user) {
 
-		return userRepository.findById(userId)
-				.map(oldUser -> {
-					user.setId(oldUser.getId());
-					userRepository.save(user);
-					return ResponseEntity.ok(user);
-				})
-				.orElse(ResponseEntity.notFound().build());	}
+		return userService.update(userId, user)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
+	}
+
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<?> delete(@PathVariable ObjectId userId) {
 
-		return userRepository.findById(userId)
-				.map(user -> {
-					userRepository.delete(user);
-					return ResponseEntity.ok(user);
-				})
+		return userService.delete(userId)
+				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@GetMapping
 	public ResponseEntity<?> list() {
 
-		List<User> users = userRepository.findAll();
+		List<User> users = userService.getAll();
 
 		return ResponseEntity.ok(users);
 	}
