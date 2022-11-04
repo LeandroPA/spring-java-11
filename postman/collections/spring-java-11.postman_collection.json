@@ -12,8 +12,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = JSON.parse(responseBody);\r",
-							"postman.setEnvironmentVariable(\"API_TOKEN\", jsonData.token);"
+							"if (pm.response.code == 200) {\r",
+							"    let jsonData = JSON.parse(responseBody);\r",
+							"    pm.environment.set(\"API_TOKEN\", jsonData.token);\r",
+							"}"
 						],
 						"type": "text/javascript"
 					}
@@ -35,12 +37,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth",
-					"protocol": "http",
+					"raw": "{{API_URL}}/api/auth",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"auth"
@@ -56,12 +56,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"\r",
-							"let jsonData = JSON.parse(responseBody);\r",
-							"    \r",
+							"let jsonData = JSON.parse(responseBody);    \r",
 							"if (pm.response.code == 200 && jsonData.length && pm.environment.get(\"USER_ID\") == \"\")  {\r",
 							"    pm.environment.set(\"USER_ID\", jsonData[0].id);\r",
-							"    pm.environment.set(\"USER_USERNAME\", jsonData[0].id);\r",
+							"    pm.environment.set(\"USER_USERNAME\", jsonData[0].username);\r",
 							"}"
 						],
 						"type": "text/javascript"
@@ -84,11 +82,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users",
+					"raw": "{{API_URL}}/api/users",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users"
@@ -126,11 +123,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users/{{USER_ID}}",
+					"raw": "{{API_URL}}/api/users/{{USER_ID}}",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
@@ -178,11 +174,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users",
+					"raw": "{{API_URL}}/api/users",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users"
@@ -201,7 +196,7 @@
 							"if (pm.response.code == 200) {\r",
 							"    let jsonData = JSON.parse(responseBody);\r",
 							"    pm.environment.set(\"USER_ID\", jsonData.id);\r",
-							"    pm.environment.set(\"USER_USERNAME\", jsonData.id);\r",
+							"    pm.environment.set(\"USER_USERNAME\", jsonData.username);\r",
 							"}"
 						],
 						"type": "text/javascript"
@@ -213,7 +208,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"{{USER_USERNAME}} + 1\",\r\n    \"password\":\"{{USER_PASSWORD}}\"\r\n}",
+					"raw": "{\r\n    \"username\":\"{{USER_USERNAME}}\",\r\n    \"password\":\"{{USER_PASSWORD}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -221,11 +216,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users/{{USER_ID}}",
+					"raw": "{{API_URL}}/api/users/{{USER_ID}}",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
@@ -272,11 +266,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/users/{{USER_ID}}",
+					"raw": "{{API_URL}}/api/users/{{USER_ID}}",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
