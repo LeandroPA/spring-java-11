@@ -23,6 +23,8 @@ dependencies {
     implementation 'org.springframework.security:spring-security-web:5.7.3'
     implementation 'org.springframework.security:spring-security-config:5.7.3'
 
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
