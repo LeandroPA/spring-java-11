@@ -29,19 +29,18 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 		if (header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 
-			UsernamePasswordAuthenticationToken auth = getAuthentication(header.substring(SecurityConstants.TOKEN_PREFIX.length()));
-			auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-			SecurityContextHolder.getContext().setAuthentication(auth);
+			getAuthentication(header.substring(SecurityConstants.TOKEN_PREFIX.length()))
+					.ifPresent(auth -> {
+						auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+						SecurityContextHolder.getContext().setAuthentication(auth);
+					});
 		}
-
 		chain.doFilter(request, response);
 	}
 
-	private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+	private Optional<UsernamePasswordAuthenticationToken> getAuthentication(String token) {
 		return Optional.ofNullable(token)
 				.map(token1 -> jwtTokenUtil.getUsername(token1))
-				.map(user -> new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()))
-				.orElse(null); //TODO: throw an exception for invalid token?
+				.map(user -> new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()));
 	}
 }
