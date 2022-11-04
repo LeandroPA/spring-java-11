@@ -40,7 +40,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private UsernamePasswordAuthenticationToken getAuthentication(String token) {
 		return Optional.ofNullable(token)
-				.filter(token1 -> jwtTokenUtil.validate(token1))
 				.map(token1 -> jwtTokenUtil.getUsername(token1))
 				.map(user -> new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()))
 				.orElse(null); //TODO: throw an exception for invalid token?
