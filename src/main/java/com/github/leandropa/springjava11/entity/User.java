@@ -10,13 +10,21 @@ import java.util.Objects;
 public class User {
 
 	@Id
-	private ObjectId id;
+	private String id;
 
 	private String username;
 
 	private String password;
 
 	public User() {
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
