@@ -1,5 +1,6 @@
 package com.github.leandropa.springjava11.filter;
 
+import com.github.leandropa.springjava11.model.JwtResponse;
 import com.github.leandropa.springjava11.util.JwtTokenUtil;
 import com.github.leandropa.springjava11.util.SecurityConstants;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,7 +41,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private Optional<UsernamePasswordAuthenticationToken> getAuthentication(String token) {
 		return Optional.ofNullable(token)
-				.map(token1 -> jwtTokenUtil.getUsername(token1))
+				.map(token1 -> jwtTokenUtil.getAccessToken(token1))
+				.map(JwtResponse::getUsername)
 				.map(user -> new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()));
 	}
 }
