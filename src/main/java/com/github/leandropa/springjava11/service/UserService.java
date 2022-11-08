@@ -12,6 +12,8 @@ public interface UserService {
 
 	Optional<User> getUserById(ObjectId id);
 
+	Optional<User> getUserByUsername(String username);
+
 	User insert(User user);
 
 	Optional<User> update(ObjectId id, User user);

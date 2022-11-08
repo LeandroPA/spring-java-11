@@ -1,6 +1,7 @@
 package com.github.leandropa.springjava11.security;
 
 import com.github.leandropa.springjava11.filter.JWTAuthorizationFilter;
+import com.github.leandropa.springjava11.service.UserDetailsServiceImpl;
 import com.github.leandropa.springjava11.util.SecurityConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-//	@Resource
-//	private UserDetailsService userDetailsService;
 
 	@Resource
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -30,16 +29,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Resource
 	private JWTAuthorizationFilter jwtAuthorizationFilter;
 
+	@Resource
+	private UserDetailsServiceImpl userDetailsService;
+
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-				.withUser("Leandro")
-				.password(bCryptPasswordEncoder.encode("123456789"))
-				.roles("admin_role")
-				.and()
-				.passwordEncoder(bCryptPasswordEncoder);
-//		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
 
 	@Bean
@@ -50,9 +46,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
-		System.out.println("WebSecurity::configure::HttpSecurity");
-
 		http.cors()
 				.and()
 				.csrf().disable()
@@ -65,33 +58,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().authenticationEntryPoint( (req, res, ex) ->
 						res.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage())
 				);
-
-//		http.csrf().disable()
-//				.authorizeRequests().antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
-//				.anyRequest().authenticated()
-//				.and()
-////				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-//				.addFilter(new JWTAuthorizationFilter(authenticationManager()))
-//				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//		http.cors().and().authorizeRequests()
-//				.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
-//				.anyRequest().authenticated()
-//				.and()
-////				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-//				.addFilter(new JWTAuthorizationFilter(authenticationManager()))
-//				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
-
-//	@Bean
-//	CorsConfigurationSource corsConfigurationSource() {
-//
-//		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//		CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-//		source.registerCorsConfiguration("/**", corsConfiguration);
-//
-//		return source;
-//	}
 
 	@Bean
 	public CorsFilter corsFilter() {
@@ -106,6 +73,4 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
 	}
-
-
 }
