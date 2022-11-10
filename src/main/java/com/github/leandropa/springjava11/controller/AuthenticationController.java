@@ -5,6 +5,7 @@ import com.github.leandropa.springjava11.entity.User;
 import com.github.leandropa.springjava11.model.JwtResponse;
 import com.github.leandropa.springjava11.util.JwtTokenUtil;
 import com.github.leandropa.springjava11.util.SecurityConstants;
+import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 
+@Log
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -29,9 +31,15 @@ public class AuthenticationController {
 	@PostMapping
 	public ResponseEntity<?> auth(@Validated(UserAuthentication.class) @RequestBody User user) throws Exception {
 
+		log.info("Receiving authenticate request with " + user);
+
 		Authentication auth = authenticate(user.getUsername(), user.getPassword());
 
+		log.info("User " + user.getUsername() + " authenticated");
+
 		final JwtResponse token = jwtTokenUtil.generateAccessToken(user.getUsername());
+
+		log.info("Responding with generated token");
 
 		return ResponseEntity.ok(token);
 	}
@@ -40,7 +48,11 @@ public class AuthenticationController {
 
 		String token = authHeader.replaceFirst(SecurityConstants.TOKEN_PREFIX, "");
 
-		return ResponseEntity.ok(jwtTokenUtil.getAccessToken(token));
+		JwtResponse tokenResponse = jwtTokenUtil.getAccessToken(token);
+
+		log.info("Retrieving token info for user " + tokenResponse.getUsername());
+
+		return ResponseEntity.ok(tokenResponse);
 	}
 
 	private Authentication authenticate(String username, String password) throws Exception {
