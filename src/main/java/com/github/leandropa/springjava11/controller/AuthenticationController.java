@@ -1,5 +1,6 @@
 package com.github.leandropa.springjava11.controller;
 
+import com.github.leandropa.springjava11.validation.UserAuthentication;
 import com.github.leandropa.springjava11.entity.User;
 import com.github.leandropa.springjava11.model.JwtResponse;
 import com.github.leandropa.springjava11.util.JwtTokenUtil;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,7 +27,7 @@ public class AuthenticationController {
 	private AuthenticationManager authenticationManager;
 
 	@PostMapping
-	public ResponseEntity<?> auth(@RequestBody User user) throws Exception {
+	public ResponseEntity<?> auth(@Validated(UserAuthentication.class) @RequestBody User user) throws Exception {
 
 		Authentication auth = authenticate(user.getUsername(), user.getPassword());
 
