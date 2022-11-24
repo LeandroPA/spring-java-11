@@ -1,7 +1,9 @@
 package com.github.leandropa.springjava11.service;
 
 import com.github.leandropa.springjava11.entity.User;
+import com.github.leandropa.springjava11.exception.UsernameAlreadyExistsException;
 import com.github.leandropa.springjava11.repository.UserRepository;
+import lombok.extern.java.Log;
 import org.bson.types.ObjectId;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Log
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -37,14 +40,32 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User insert(User user) {
+	public User insert(User user) throws UsernameAlreadyExistsException {
+
+		if (userRepository.existsByUsername(user.getUsername())) {
+			throw new UsernameAlreadyExistsException();
+		}
+
+		log.info("Inserting " + user);
+
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
 
 	@Override
-	public Optional<User> update(ObjectId id, User user) {
-		return getUserById(id)
+	public Optional<User> update(User user) throws UsernameAlreadyExistsException {
+
+		boolean existOtherUserWithUsername = getUserByUsername(user.getUsername())
+				.map(oldUser -> !oldUser.getId().equals(user.getId()))
+				.orElse(false);
+
+		if (existOtherUserWithUsername) {
+			throw new UsernameAlreadyExistsException();
+		}
+
+		log.info("Updating " + user);
+
+		return getUserById(user.getId())
 				.map(oldUser -> mapUpdate(oldUser, user))
 				.map(userRepository::save);
 	}
@@ -59,6 +80,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> delete(ObjectId id) {
+
+		log.info("Deleting User: #" + id);
+
 		return getUserById(id)
 				.map(user -> {
 					userRepository.delete(user);

@@ -59,8 +59,10 @@ public class AuthenticationController {
 		try {
 			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>()));
 		} catch (DisabledException e) {
+			e.printStackTrace();
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
+			e.printStackTrace();
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
 	}

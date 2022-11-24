@@ -1,6 +1,7 @@
 package com.github.leandropa.springjava11.service;
 
 import com.github.leandropa.springjava11.entity.User;
+import com.github.leandropa.springjava11.exception.UsernameAlreadyExistsException;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public interface UserService {
 
 	Optional<User> getUserByUsername(String username);
 
-	User insert(User user);
+	User insert(User user) throws UsernameAlreadyExistsException;
 
-	Optional<User> update(ObjectId id, User user);
+	Optional<User> update(User user) throws UsernameAlreadyExistsException;
 
 	Optional<User> delete(ObjectId id);
 
