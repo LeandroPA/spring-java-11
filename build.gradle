@@ -6,12 +6,31 @@ plugins {
 	id 'war'
 }
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 group = 'com.github.leandropa'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
+}
+
+springBoot {
+    buildInfo() {
+        properties {
+            additional = [
+                    'build.commit_id': getGitHash()
+            ]
+        }
+    }
 }
 
 dependencies {

@@ -3,6 +3,8 @@ package com.github.leandropa.springjava11.security;
 import com.github.leandropa.springjava11.filter.JWTAuthorizationFilter;
 import com.github.leandropa.springjava11.service.UserDetailsServiceImpl;
 import com.github.leandropa.springjava11.util.SecurityConstants;
+import lombok.extern.java.Log;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
+@Log
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
@@ -31,7 +34,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Resource
 	private UserDetailsServiceImpl userDetailsService;
-
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
